@@ -25,7 +25,7 @@ npm run test
 
 适合 EdgeOne Pages、Cloudflare Pages、Vercel Static、Netlify 等静态前端托管。
 
-- Node 版本：`22.12.0`，项目根目录已提供 `.nvmrc`。
+- Node 版本：`20.18.0`，项目根目录已提供 `edgeone.json` 指定 EdgeOne 预装版本。
 - 安装命令：`npm ci`
 - 构建命令：`npm run build`
 - 输出目录：`dist`

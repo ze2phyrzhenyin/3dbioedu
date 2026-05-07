@@ -86,7 +86,7 @@ export function getComplementSequence(sequence: string): string {
   const validation = validateDnaSequence(sequence)
 
   if (!validation.isValid) {
-    throw new Error(validation.message)
+    throw new Error('只能输入 A、T、C、G')
   }
 
   return validation.sequence
@@ -113,7 +113,7 @@ export function generateBasePairs(sequence: string): BasePair[] {
   const validation = validateDnaSequence(sequence)
 
   if (!validation.isValid) {
-    throw new Error(validation.message)
+    throw new Error('只能输入 A、T、C、G')
   }
 
   return validation.sequence.split('').map((baseCharacter, pairIndex) => {
