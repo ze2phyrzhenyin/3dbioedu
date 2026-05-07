@@ -30,6 +30,7 @@ npm run test
 - 构建命令：`npm run build`
 - 输出目录：`dist`
 - 项目根目录：仓库根目录 `/`
+- Vercel：项目根目录已提供 `vercel.json`，使用相同安装命令、构建命令和输出目录。
 
 ## 主要功能
 
