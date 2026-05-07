@@ -250,64 +250,74 @@ export function AssemblyWorkbench({
         ))}
       </div>
 
-      <div className="assembly-board" role="list" aria-label="DNA 拼装槽位">
-        {templateBases.map((templateBase, slotIndex) => {
-          const placedBase = placedBases[slotIndex]
-          const expectedBase = getComplementBase(templateBase)
-          const pairType = getPairType(templateBase, expectedBase)
-          const pairTypeContent = pairContent[pairType]
+      <div className="assembly-board-shell">
+        <div className="assembly-board-head" aria-hidden="true">
+          <span>位点</span>
+          <span>模板链</span>
+          <span>配对连接</span>
+          <span>互补链</span>
+          <span>结果</span>
+        </div>
 
-          return (
-            <div
-              key={`${challengeSequence}-${slotIndex}`}
-              className={`assembly-row ${
-                placedBase ? 'is-complete' : ''
-              } ${highlightedSlot === slotIndex ? 'is-error' : ''} ${
-                hintSlot === slotIndex ? 'is-hinted' : ''
-              }`}
-              role="listitem"
-            >
-              <span className="assembly-index">{slotIndex + 1}</span>
-              <span
-                className="assembly-template-base"
-                style={getBaseChipStyle(templateBase)}
-              >
-                {templateBase}
-              </span>
-              <span className="assembly-rung" aria-hidden="true" />
-              <button
-                type="button"
-                className="assembly-slot"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => handleDrop(event, slotIndex)}
-                onClick={() => {
-                  if (selectedBase) {
-                    placeBase(slotIndex, selectedBase)
-                    return
-                  }
+        <div className="assembly-board" role="list" aria-label="DNA 拼装槽位">
+          {templateBases.map((templateBase, slotIndex) => {
+            const placedBase = placedBases[slotIndex]
+            const expectedBase = getComplementBase(templateBase)
+            const pairType = getPairType(templateBase, expectedBase)
+            const pairTypeContent = pairContent[pairType]
 
-                  if (placedBase) {
-                    clearSlot(slotIndex)
-                  }
-                }}
-                aria-label={`第 ${slotIndex + 1} 位互补槽，模板碱基 ${templateBase}`}
+            return (
+              <div
+                key={`${challengeSequence}-${slotIndex}`}
+                className={`assembly-row ${
+                  placedBase ? 'is-complete' : ''
+                } ${highlightedSlot === slotIndex ? 'is-error' : ''} ${
+                  hintSlot === slotIndex ? 'is-hinted' : ''
+                }`}
+                role="listitem"
               >
-                {placedBase ?? '放入'}
-              </button>
-              <span className="assembly-pair-note">
-                {placedBase ? (
-                  <>
-                    <CheckCircle2 size={15} aria-hidden="true" />
-                    {templateBase}-{placedBase} ·{' '}
-                    {pairTypeContent.hydrogenBondCount} 条氢键
-                  </>
-                ) : (
-                  `等待 ${expectedBase}`
-                )}
-              </span>
-            </div>
-          )
-        })}
+                <span className="assembly-index">{slotIndex + 1}</span>
+                <span
+                  className="assembly-template-base"
+                  style={getBaseChipStyle(templateBase)}
+                >
+                  {templateBase}
+                </span>
+                <span className="assembly-rung" aria-hidden="true" />
+                <button
+                  type="button"
+                  className="assembly-slot"
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={(event) => handleDrop(event, slotIndex)}
+                  onClick={() => {
+                    if (selectedBase) {
+                      placeBase(slotIndex, selectedBase)
+                      return
+                    }
+
+                    if (placedBase) {
+                      clearSlot(slotIndex)
+                    }
+                  }}
+                  aria-label={`第 ${slotIndex + 1} 位互补槽，模板碱基 ${templateBase}`}
+                >
+                  {placedBase ?? '放入'}
+                </button>
+                <span className="assembly-pair-note">
+                  {placedBase ? (
+                    <>
+                      <CheckCircle2 size={15} aria-hidden="true" />
+                      {templateBase}-{placedBase} ·{' '}
+                      {pairTypeContent.hydrogenBondCount} 条氢键
+                    </>
+                  ) : (
+                    '等待互补碱基'
+                  )}
+                </span>
+              </div>
+            )
+          })}
+        </div>
       </div>
 
       <p className={`assembly-feedback is-${feedback.tone}`} role="status">
