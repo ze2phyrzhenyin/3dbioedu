@@ -146,6 +146,36 @@ function App() {
     setResetViewKey((key) => key + 1)
   }
 
+  const modelScene = (
+    <DnaScene
+      basePairs={basePairs}
+      selection={selection}
+      options={options}
+      currentStep={currentStep}
+      resetViewKey={resetViewKey}
+      compact={learningMode === 'assemble'}
+      emptyMessage={
+        learningMode === 'assemble'
+          ? '拖入正确互补碱基后，这里会生成双螺旋片段'
+          : undefined
+      }
+      onSelect={(nextSelection) =>
+        setSelectionKey({
+          pairId: nextSelection.pair.id,
+          base: nextSelection.base,
+        })
+      }
+    />
+  )
+
+  const controls = (
+    <ControlPanel
+      options={options}
+      onOptionsChange={setOptions}
+      onResetView={() => setResetViewKey((key) => key + 1)}
+    />
+  )
+
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -182,57 +212,40 @@ function App() {
         </div>
       </header>
 
-      <div
-        className={`workspace ${
-          learningMode === 'assemble' ? 'is-assembly' : ''
-        }`}
-      >
-        <aside className="sidebar sidebar-left">
-          <ControlPanel
-            options={options}
-            onOptionsChange={setOptions}
-            onResetView={() => setResetViewKey((key) => key + 1)}
-          />
-          <StepGuide
-            currentStep={currentStep}
-            onStepChange={setCurrentStep}
-          />
-        </aside>
-
-        <section className="stage-column" aria-label="DNA 模型与拼装区域">
-          <DnaScene
-            basePairs={basePairs}
-            selection={selection}
-            options={options}
-            currentStep={currentStep}
-            resetViewKey={resetViewKey}
-            compact={learningMode === 'assemble'}
-            emptyMessage={
-              learningMode === 'assemble'
-                ? '拖入正确互补碱基后，这里会生成双螺旋片段'
-                : undefined
-            }
-            onSelect={(nextSelection) =>
-              setSelectionKey({
-                pairId: nextSelection.pair.id,
-                base: nextSelection.base,
-              })
-            }
-          />
-
-          {learningMode === 'assemble' ? (
+      {learningMode === 'assemble' ? (
+        <div className="assembly-workspace">
+          <section className="assembly-main-grid" aria-label="DNA 拼装工作区">
             <AssemblyWorkbench
               onAssembledSequenceChange={setAssemblySequence}
               onBuildHelix={handleBuildHelixFromAssembly}
             />
-          ) : null}
-        </section>
+            <div className="assembly-preview-stack">
+              {modelScene}
+              <InfoPanel selection={selection} />
+            </div>
+          </section>
 
-        <aside className="sidebar sidebar-right">
-          <InfoPanel selection={selection} />
-          {learningMode === 'assemble' ? (
+          <aside className="sidebar assembly-sidebar">
+            {controls}
             <AssemblyHelpPanel />
-          ) : (
+          </aside>
+        </div>
+      ) : (
+        <div className="workspace">
+          <aside className="sidebar sidebar-left">
+            {controls}
+            <StepGuide
+              currentStep={currentStep}
+              onStepChange={setCurrentStep}
+            />
+          </aside>
+
+          <section className="stage-column" aria-label="DNA 模型与序列区域">
+            {modelScene}
+          </section>
+
+          <aside className="sidebar sidebar-right">
+            <InfoPanel selection={selection} />
             <SequenceInput
               value={sequenceInput}
               activeSequence={activeSequence}
@@ -242,9 +255,9 @@ function App() {
               validation={validation}
               onChange={handleSequenceChange}
             />
-          )}
-        </aside>
-      </div>
+          </aside>
+        </div>
+      )}
     </main>
   )
 }

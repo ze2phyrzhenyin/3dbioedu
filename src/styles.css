@@ -85,6 +85,29 @@
   align-items: stretch;
 }
 
+.assembly-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  gap: 16px;
+  max-width: 1440px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.assembly-main-grid {
+  display: grid;
+  grid-template-columns: minmax(520px, 1.1fr) minmax(360px, 0.9fr);
+  gap: 16px;
+  min-width: 0;
+  align-items: start;
+}
+
+.assembly-preview-stack {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+}
+
 .stage-column {
   display: grid;
   min-width: 0;
@@ -123,13 +146,128 @@
 }
 
 .scene-panel {
+  position: relative;
+  height: 720px;
   min-height: 720px;
   overflow: hidden;
   touch-action: none;
 }
 
 .scene-panel.is-compact {
+  height: 430px;
   min-height: 430px;
+}
+
+.scene-panel canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.scene-fallback {
+  position: relative;
+  display: grid;
+  height: 100%;
+  min-height: inherit;
+  place-items: center;
+  overflow: hidden;
+  background: #f7fafc;
+}
+
+.scene-fallback svg {
+  width: min(100%, 540px);
+  height: calc(100% - 48px);
+  padding: 18px;
+}
+
+.scene-fallback-empty p,
+.scene-fallback-note {
+  border: 1px dashed #94a3b8;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(248, 250, 252, 0.92);
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 720;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.scene-fallback-note {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  max-width: min(300px, calc(100% - 28px));
+  margin: 0;
+}
+
+.fallback-backbone {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 20;
+  opacity: 0.72;
+}
+
+.fallback-backbone-a {
+  stroke: #8bdff2;
+}
+
+.fallback-backbone-b {
+  stroke: #0ea5e9;
+}
+
+.fallback-rung {
+  stroke: #334155;
+  stroke-width: 1.3;
+  opacity: 0.62;
+}
+
+.fallback-hydrogen {
+  stroke: #111827;
+  stroke-dasharray: 2 4;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.fallback-hydrogen.is-A-T {
+  stroke: #d97706;
+}
+
+.fallback-hydrogen.is-C-G {
+  stroke: #0f766e;
+}
+
+.fallback-base {
+  cursor: pointer;
+}
+
+.fallback-base rect {
+  stroke: rgba(15, 23, 42, 0.22);
+  stroke-width: 1;
+}
+
+.fallback-base text {
+  fill: #0f172a;
+  font-size: 12px;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.fallback-base.is-selected rect,
+.fallback-base:hover rect {
+  stroke: #2563eb;
+  stroke-width: 2;
+}
+
+.assembly-workspace .scene-panel.is-compact {
+  height: min(52vh, 500px);
+  min-height: 360px;
+}
+
+.assembly-workspace .assembly-board {
+  max-height: min(46vh, 430px);
+  overflow: auto;
+  padding-right: 3px;
 }
 
 .control-grid {
@@ -620,6 +758,19 @@
     grid-template-columns: minmax(230px, 290px) minmax(460px, 1fr);
   }
 
+  .assembly-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .assembly-main-grid {
+    grid-template-columns: minmax(500px, 1fr) minmax(330px, 0.75fr);
+  }
+
+  .assembly-sidebar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
   .sidebar-right {
     grid-column: 1 / -1;
     display: grid;
@@ -627,15 +778,30 @@
   }
 
   .scene-panel {
+    height: 660px;
     min-height: 660px;
   }
 
   .scene-panel.is-compact {
+    height: 420px;
     min-height: 420px;
   }
 
   .assembly-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1020px) {
+  .assembly-main-grid,
+  .assembly-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .assembly-workspace .assembly-board {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
   }
 }
 
@@ -646,6 +812,10 @@
 
   .app-header,
   .workspace,
+  .assembly-workspace,
+  .assembly-main-grid,
+  .assembly-preview-stack,
+  .assembly-sidebar,
   .sidebar-right {
     grid-template-columns: 1fr;
   }
@@ -666,6 +836,8 @@
   }
 
   .workspace,
+  .assembly-workspace,
+  .assembly-main-grid,
   .stage-column,
   .sidebar {
     gap: 10px;
@@ -692,12 +864,19 @@
   }
 
   .scene-panel {
+    height: min(58svh, 520px);
     min-height: min(58svh, 520px);
     border-radius: 8px;
   }
 
   .scene-panel.is-compact {
+    height: min(44svh, 380px);
     min-height: min(48svh, 420px);
+  }
+
+  .assembly-workspace .scene-panel.is-compact {
+    height: min(42svh, 360px);
+    min-height: 300px;
   }
 
   .mode-switch {
@@ -794,10 +973,12 @@
   }
 
   .scene-panel {
+    height: min(52svh, 430px);
     min-height: min(52svh, 430px);
   }
 
   .scene-panel.is-compact {
+    height: min(40svh, 340px);
     min-height: min(42svh, 360px);
   }
 

@@ -481,7 +481,13 @@ export function DnaModel({
 
   const effectiveVisibility = getEffectiveVisibility(options, currentStep)
   const modelScale =
-    basePairs.length <= 2 ? 1.85 : basePairs.length <= 5 ? 1.42 : 1.08
+    basePairs.length <= 2
+      ? 1.85
+      : basePairs.length <= 5
+        ? 1.42
+        : basePairs.length <= 12
+          ? 1.08
+          : 0.92
 
   const modelParams = useMemo(() => {
     const basePairCount = basePairs.length
