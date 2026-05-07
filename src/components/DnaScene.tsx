@@ -51,13 +51,9 @@ export function DnaScene({
   emptyMessage,
   onSelect,
 }: DnaSceneProps) {
-  const sceneIsEmpty = basePairs.length === 0
-
   return (
     <section
-      className={`scene-panel ${compact ? 'is-compact' : ''} ${
-        sceneIsEmpty ? 'is-empty' : ''
-      }`}
+      className={`scene-panel ${compact ? 'is-compact' : ''}`}
       aria-label="DNA 双螺旋 3D 模型"
     >
       <Canvas
@@ -90,11 +86,6 @@ export function DnaScene({
 
         <CameraControls resetViewKey={resetViewKey} />
       </Canvas>
-      {sceneIsEmpty ? (
-        <div className="scene-empty-message" aria-live="polite">
-          <span>{emptyMessage ?? '请输入 A/T/C/G 序列'}</span>
-        </div>
-      ) : null}
     </section>
   )
 }

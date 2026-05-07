@@ -193,14 +193,10 @@ function App() {
             onOptionsChange={setOptions}
             onResetView={() => setResetViewKey((key) => key + 1)}
           />
-          {learningMode === 'assemble' ? (
-            <AssemblyHelpPanel />
-          ) : (
-            <StepGuide
-              currentStep={currentStep}
-              onStepChange={setCurrentStep}
-            />
-          )}
+          <StepGuide
+            currentStep={currentStep}
+            onStepChange={setCurrentStep}
+          />
         </aside>
 
         <section className="stage-column" aria-label="DNA 模型与拼装区域">
@@ -234,7 +230,9 @@ function App() {
 
         <aside className="sidebar sidebar-right">
           <InfoPanel selection={selection} />
-          {learningMode === 'assemble' ? null : (
+          {learningMode === 'assemble' ? (
+            <AssemblyHelpPanel />
+          ) : (
             <SequenceInput
               value={sequenceInput}
               activeSequence={activeSequence}
