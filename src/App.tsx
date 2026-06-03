@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { Languages } from 'lucide-react'
 
 import { AssemblyHelpPanel } from './components/AssemblyHelpPanel'
 import { AssemblyWorkbench } from './components/AssemblyWorkbench'
@@ -10,7 +11,10 @@ import { StepGuide } from './components/StepGuide'
 import {
   DEFAULT_DNA_SEQUENCE,
   MAX_DISPLAYED_BASE_PAIRS,
+  localize,
+  uiText,
 } from './data/scienceContent'
+import { useLanguage } from './languageContext'
 import type { DnaSelection, LearningMode, StepId, ViewOptions } from './types'
 import {
   type DnaBase,
@@ -29,6 +33,7 @@ const initialOptions: ViewOptions = {
 }
 
 function App() {
+  const { language, toggleLanguage } = useLanguage()
   const [learningMode, setLearningMode] = useState<LearningMode>('explore')
   const [sequenceInput, setSequenceInput] = useState(DEFAULT_DNA_SEQUENCE)
   const [activeSequence, setActiveSequence] = useState(DEFAULT_DNA_SEQUENCE)
@@ -146,6 +151,10 @@ function App() {
     setResetViewKey((key) => key + 1)
   }
 
+  useEffect(() => {
+    document.title = localize(uiText.app.title, language)
+  }, [language])
+
   const modelScene = (
     <DnaScene
       basePairs={basePairs}
@@ -156,7 +165,7 @@ function App() {
       compact={learningMode === 'assemble'}
       emptyMessage={
         learningMode === 'assemble'
-          ? "完成正确配对后生成双螺旋片段 / Le segment 3D apparaît après l'appariement correct"
+          ? localize(uiText.app.assemblyEmptyMessage, language)
           : undefined
       }
       onSelect={(nextSelection) =>
@@ -180,40 +189,50 @@ function App() {
     <main className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">教学简化模型 / Modèle pédagogique simplifié</p>
-          <h1>DNA 双螺旋探索器 / Explorateur de la double hélice d'ADN</h1>
+          <p className="eyebrow">{localize(uiText.app.eyebrow, language)}</p>
+          <h1>{localize(uiText.app.title, language)}</h1>
         </div>
         <div className="header-tools">
           <p className="header-summary">
-            观察两条链、糖-磷酸骨架、A-T / C-G 互补配对和双螺旋整体结构。 /
-            Observez les deux brins, le squelette sucre-phosphate, les
-            appariements A-T / C-G et la structure globale de la double hélice.
+            {localize(uiText.app.summary, language)}
           </p>
-          <div
-            className="mode-switch"
-            role="group"
-            aria-label="学习模式 / Mode d'apprentissage"
-          >
+          <div className="header-actions">
             <button
               type="button"
-              className={`mode-button ${
-                learningMode === 'explore' ? 'is-active' : ''
-              }`}
-              aria-pressed={learningMode === 'explore'}
-              onClick={() => handleLearningModeChange('explore')}
+              className="language-button"
+              aria-label={localize(uiText.language.ariaLabel, language)}
+              title={localize(uiText.language.ariaLabel, language)}
+              onClick={toggleLanguage}
             >
-              观察模型 / Explorer
+              <Languages size={17} aria-hidden="true" />
+              <span>{localize(uiText.language.switchLabel, language)}</span>
             </button>
-            <button
-              type="button"
-              className={`mode-button ${
-                learningMode === 'assemble' ? 'is-active' : ''
-              }`}
-              aria-pressed={learningMode === 'assemble'}
-              onClick={() => handleLearningModeChange('assemble')}
+            <div
+              className="mode-switch"
+              role="group"
+              aria-label={localize(uiText.app.modeLabel, language)}
             >
-              拼装模式 / Assembler
-            </button>
+              <button
+                type="button"
+                className={`mode-button ${
+                  learningMode === 'explore' ? 'is-active' : ''
+                }`}
+                aria-pressed={learningMode === 'explore'}
+                onClick={() => handleLearningModeChange('explore')}
+              >
+                {localize(uiText.app.exploreMode, language)}
+              </button>
+              <button
+                type="button"
+                className={`mode-button ${
+                  learningMode === 'assemble' ? 'is-active' : ''
+                }`}
+                aria-pressed={learningMode === 'assemble'}
+                onClick={() => handleLearningModeChange('assemble')}
+              >
+                {localize(uiText.app.assembleMode, language)}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -222,7 +241,7 @@ function App() {
         <div className="assembly-workspace">
           <section
             className="assembly-main-grid"
-            aria-label="DNA 拼装工作区 / Espace d'assemblage ADN"
+            aria-label={localize(uiText.app.assemblyWorkspaceLabel, language)}
           >
             <AssemblyWorkbench
               onAssembledSequenceChange={setAssemblySequence}
@@ -251,7 +270,7 @@ function App() {
 
           <section
             className="stage-column"
-            aria-label="DNA 模型与序列区域 / Zone modèle ADN et séquence"
+            aria-label={localize(uiText.app.stageLabel, language)}
           >
             {modelScene}
           </section>

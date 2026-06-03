@@ -1,4 +1,11 @@
-import { baseContent, modelNotes, pairContent } from '../data/scienceContent'
+import {
+  baseContent,
+  localize,
+  modelNotes,
+  pairContent,
+  uiText,
+} from '../data/scienceContent'
+import { useLanguage } from '../languageContext'
 import type { DnaSelection } from '../types'
 
 interface InfoPanelProps {
@@ -6,19 +13,24 @@ interface InfoPanelProps {
 }
 
 export function InfoPanel({ selection }: InfoPanelProps) {
+  const { language } = useLanguage()
+
   if (!selection) {
     return (
       <section className="panel info-panel" aria-labelledby="info-title">
         <div className="panel-heading">
-          <p className="eyebrow">信息 / Informations</p>
-          <h2 id="info-title">碱基说明 / Description des bases</h2>
+          <p className="eyebrow">{localize(uiText.info.eyebrow, language)}</p>
+          <h2 id="info-title">{localize(uiText.info.title, language)}</h2>
         </div>
         <p className="empty-state">
-          点击模型中的碱基查看配对关系。 / Cliquez sur une base du modèle pour
-          voir son appariement.
+          {localize(uiText.info.emptyState, language)}
         </p>
-        <p className="science-note">{modelNotes.simplified}</p>
-        <p className="science-note">{modelNotes.geometryBasis}</p>
+        <p className="science-note">
+          {localize(modelNotes.simplified, language)}
+        </p>
+        <p className="science-note">
+          {localize(modelNotes.geometryBasis, language)}
+        </p>
       </section>
     )
   }
@@ -30,48 +42,58 @@ export function InfoPanel({ selection }: InfoPanelProps) {
   return (
     <section className="panel info-panel" aria-labelledby="info-title">
       <div className="panel-heading">
-        <p className="eyebrow">信息 / Informations</p>
-        <h2 id="info-title">碱基说明 / Description des bases</h2>
+        <p className="eyebrow">{localize(uiText.info.eyebrow, language)}</p>
+        <h2 id="info-title">{localize(uiText.info.title, language)}</h2>
       </div>
 
       <dl className="info-list">
         <div>
-          <dt>当前碱基 / Base sélectionnée</dt>
+          <dt>{localize(uiText.info.currentBase, language)}</dt>
           <dd>
-            {selectedBaseContent.name} ({base})
+            {localize(selectedBaseContent.name, language)} ({base})
           </dd>
         </div>
         <div>
-          <dt>配对关系 / Appariement</dt>
+          <dt>{localize(uiText.info.pairing, language)}</dt>
           <dd>
-            {pair.base} 与 {pair.complement} 配对 / {pair.base} s'apparie avec{' '}
-            {pair.complement}
+            {language === 'fr'
+              ? `${pair.base} s'apparie avec ${pair.complement}`
+              : `${pair.base} 与 ${pair.complement} 配对`}
           </dd>
         </div>
         <div>
-          <dt>碱基对 / Paire de bases</dt>
+          <dt>{localize(uiText.info.basePair, language)}</dt>
           <dd>
-            {pair.pairLabel}，属于 {pairTypeContent.label} 配对 /{' '}
-            {pair.pairLabel}, appariement {pairTypeContent.label}
+            {language === 'fr'
+              ? `${pair.pairLabel}, appariement ${pairTypeContent.label}`
+              : `${pair.pairLabel}，属于 ${pairTypeContent.label} 配对`}
           </dd>
         </div>
         <div>
-          <dt>氢键示意数 / Liaisons H schématiques</dt>
-          <dd>{pairTypeContent.hydrogenBondCount} 条 / {pairTypeContent.hydrogenBondCount}</dd>
+          <dt>{localize(uiText.info.hydrogenBondCount, language)}</dt>
+          <dd>
+            {language === 'fr'
+              ? pairTypeContent.hydrogenBondCount
+              : `${pairTypeContent.hydrogenBondCount} 条`}
+          </dd>
         </div>
         <div>
-          <dt>课堂解释 / Explication</dt>
-          <dd>{selectedBaseContent.explanation}</dd>
+          <dt>{localize(uiText.info.classroomExplanation, language)}</dt>
+          <dd>{localize(selectedBaseContent.explanation, language)}</dd>
         </div>
         <div>
-          <dt>配对原则 / Principe d'appariement</dt>
-          <dd>{pairTypeContent.explanation}</dd>
+          <dt>{localize(uiText.info.pairingPrinciple, language)}</dt>
+          <dd>{localize(pairTypeContent.explanation, language)}</dd>
         </div>
       </dl>
 
-      <p className="science-note">{modelNotes.simplified}</p>
-      <p className="science-note">{modelNotes.hydrogenBond}</p>
-      <p className="science-note">{modelNotes.geometryBasis}</p>
+      <p className="science-note">{localize(modelNotes.simplified, language)}</p>
+      <p className="science-note">
+        {localize(modelNotes.hydrogenBond, language)}
+      </p>
+      <p className="science-note">
+        {localize(modelNotes.geometryBasis, language)}
+      </p>
     </section>
   )
 }

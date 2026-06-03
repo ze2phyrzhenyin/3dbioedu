@@ -1,4 +1,5 @@
-import { baseContent } from '../data/scienceContent'
+import { baseContent, localize, uiText } from '../data/scienceContent'
+import { useLanguage } from '../languageContext'
 import type { DnaSelection, StepId, ViewOptions } from '../types'
 import type { BasePair, DnaBase } from '../utils/dna'
 
@@ -132,6 +133,7 @@ export function DnaFallbackView({
   emptyMessage,
   onSelect,
 }: DnaFallbackViewProps) {
+  const { language } = useLanguage()
   const visibility = getVisibility(options, currentStep)
 
   if (basePairs.length === 0) {
@@ -149,12 +151,12 @@ export function DnaFallbackView({
   return (
     <div
       className="scene-fallback"
-      aria-label="DNA 二维教学示意图 / Schéma pédagogique ADN en 2D"
+      aria-label={localize(uiText.scene.fallback2dLabel, language)}
     >
       <svg
         viewBox={`0 0 ${VIEWBOX_WIDTH} ${viewboxHeight}`}
         role="img"
-        aria-label="DNA 双螺旋二维备用示意图 / Schéma 2D de secours de la double hélice ADN"
+        aria-label={localize(uiText.scene.fallback2dImageLabel, language)}
       >
         {visibility.showBackbone ? (
           <>
@@ -240,8 +242,7 @@ export function DnaFallbackView({
           : null}
       </svg>
       <p className="scene-fallback-note">
-        当前环境未启用 WebGL，显示二维教学示意图。 / WebGL n'est pas activé
-        dans cet environnement; affichage du schéma pédagogique 2D.
+        {localize(uiText.scene.fallback2dNote, language)}
       </p>
     </div>
   )

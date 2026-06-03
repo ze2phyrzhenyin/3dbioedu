@@ -12,6 +12,8 @@ import {
 import type { ErrorInfo, ReactNode } from 'react'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 
+import { localize, uiText } from '../data/scienceContent'
+import { useLanguage } from '../languageContext'
 import type { StepId, DnaSelection, ViewOptions } from '../types'
 import type { BasePair } from '../utils/dna'
 import { DnaFallbackView } from './DnaFallbackView'
@@ -72,10 +74,12 @@ function SceneFallback({
   emptyMessage,
   onSelect,
 }: SceneFallbackProps) {
+  const { language } = useLanguage()
+
   return (
     <section
       className={`scene-panel ${compact ? 'is-compact' : ''}`}
-      aria-label="DNA 双螺旋教学示意图 / Schéma pédagogique de la double hélice ADN"
+      aria-label={localize(uiText.scene.diagramLabel, language)}
     >
       <SceneFallbackContent
         basePairs={basePairs}
@@ -188,11 +192,12 @@ export function DnaScene({
   emptyMessage,
   onSelect,
 }: DnaSceneProps) {
+  const { language } = useLanguage()
   const webGlAvailable = useMemo(() => canUseWebGl(), [])
   const [canvasReady, setCanvasReady] = useState(false)
   const [webGlFailed, setWebGlFailed] = useState(false)
   const fallbackMessage =
-    emptyMessage ?? '请输入 A/T/C/G 序列 / Saisir une séquence A/T/C/G'
+    emptyMessage ?? localize(uiText.scene.emptySequence, language)
   const fallbackContent = (
     <SceneFallbackContent
       basePairs={basePairs}
@@ -248,7 +253,7 @@ export function DnaScene({
     >
       <section
         className={`scene-panel ${compact ? 'is-compact' : ''}`}
-        aria-label="DNA 双螺旋 3D 模型 / Modèle 3D de la double hélice ADN"
+        aria-label={localize(uiText.scene.modelLabel, language)}
       >
         <Canvas
           shadows

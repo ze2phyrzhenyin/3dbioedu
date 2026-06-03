@@ -6,8 +6,11 @@ import {
   ASSEMBLY_CHALLENGE_SEQUENCES,
   assemblyContent,
   baseContent,
+  localize,
   pairContent,
+  uiText,
 } from '../data/scienceContent'
+import { useLanguage } from '../languageContext'
 import {
   evaluateBasePlacement,
   getAssemblyCompletion,
@@ -21,7 +24,15 @@ import {
   isDnaBase,
 } from '../utils/dna'
 
-type FeedbackTone = 'neutral' | 'success' | 'error'
+type FeedbackState =
+  | { tone: 'neutral'; kind: 'initial' }
+  | { tone: 'neutral'; kind: 'hint'; slotNumber: number; templateBase: DnaBase; expectedBase: DnaBase }
+  | { tone: 'success'; kind: 'correctPair'; templateBase: DnaBase; candidateBase: DnaBase; hydrogenBondCount: number }
+  | { tone: 'success'; kind: 'complete' }
+  | { tone: 'success'; kind: 'build' }
+  | { tone: 'error'; kind: 'invalidBase' }
+  | { tone: 'error'; kind: 'incorrectPair'; candidateBase: DnaBase; templateBase: DnaBase; expectedBase: DnaBase }
+  | { tone: 'error'; kind: 'emptyBuild' }
 
 interface AssemblyWorkbenchProps {
   onAssembledSequenceChange: (sequence: string) => void
@@ -34,10 +45,50 @@ function getBaseChipStyle(base: DnaBase): CSSProperties {
   } as CSSProperties
 }
 
+function getFeedbackMessage(feedback: FeedbackState, language: 'fr' | 'zh') {
+  switch (feedback.kind) {
+    case 'initial':
+      return localize(assemblyContent.initialFeedback, language)
+    case 'hint':
+      return language === 'fr'
+        ? `Indice: la base modèle en position ${feedback.slotNumber} est ${feedback.templateBase}; choisissez ${feedback.expectedBase}.`
+        : `提示：第 ${feedback.slotNumber} 位模板碱基是 ${feedback.templateBase}，应选择 ${feedback.expectedBase}。`
+    case 'correctPair':
+      return language === 'fr'
+        ? `${localize(
+            assemblyContent.correctFeedback,
+            language,
+          )} ${feedback.templateBase}-${feedback.candidateBase}: ${feedback.hydrogenBondCount} ${localize(
+            uiText.assembly.hydrogenBondLines,
+            language,
+          )}.`
+        : `${localize(
+            assemblyContent.correctFeedback,
+            language,
+          )} ${feedback.templateBase}-${feedback.candidateBase} 有 ${feedback.hydrogenBondCount} ${localize(
+            uiText.assembly.hydrogenBondLines,
+            language,
+          )}。`
+    case 'complete':
+      return localize(assemblyContent.completeFeedback, language)
+    case 'build':
+      return localize(assemblyContent.buildFeedback, language)
+    case 'invalidBase':
+      return localize(assemblyContent.invalidBaseFeedback, language)
+    case 'incorrectPair':
+      return language === 'fr'
+        ? `${feedback.candidateBase} ne s'apparie pas avec ${feedback.templateBase}; ${feedback.templateBase} doit s'apparier avec ${feedback.expectedBase}.`
+        : `${feedback.candidateBase} 不能与 ${feedback.templateBase} 配对；${feedback.templateBase} 应与 ${feedback.expectedBase} 配对。`
+    case 'emptyBuild':
+      return localize(assemblyContent.emptyBuildFeedback, language)
+  }
+}
+
 export function AssemblyWorkbench({
   onAssembledSequenceChange,
   onBuildHelix,
 }: AssemblyWorkbenchProps) {
+  const { language } = useLanguage()
   const [challengeIndex, setChallengeIndex] = useState(0)
   const [placedBases, setPlacedBases] = useState<Array<DnaBase | null>>(
     () => Array.from({ length: ASSEMBLY_CHALLENGE_SEQUENCES[0].length }, () => null),
@@ -45,12 +96,9 @@ export function AssemblyWorkbench({
   const [selectedBase, setSelectedBase] = useState<DnaBase | null>(null)
   const [highlightedSlot, setHighlightedSlot] = useState<number | null>(null)
   const [hintSlot, setHintSlot] = useState<number | null>(null)
-  const [feedback, setFeedback] = useState<{
-    tone: FeedbackTone
-    message: string
-  }>({
+  const [feedback, setFeedback] = useState<FeedbackState>({
     tone: 'neutral',
-    message: assemblyContent.initialFeedback,
+    kind: 'initial',
   })
 
   const challengeSequence = ASSEMBLY_CHALLENGE_SEQUENCES[challengeIndex]
@@ -66,6 +114,10 @@ export function AssemblyWorkbench({
     () => getAssemblyCompletion(challengeSequence, placedBases),
     [challengeSequence, placedBases],
   )
+  const feedbackMessage = useMemo(
+    () => getFeedbackMessage(feedback, language),
+    [feedback, language],
+  )
 
   const resetAssembly = (nextChallengeIndex = challengeIndex) => {
     const nextSequence = ASSEMBLY_CHALLENGE_SEQUENCES[nextChallengeIndex]
@@ -76,7 +128,7 @@ export function AssemblyWorkbench({
     setHintSlot(null)
     setFeedback({
       tone: 'neutral',
-      message: assemblyContent.initialFeedback,
+      kind: 'initial',
     })
     onAssembledSequenceChange('')
   }
@@ -88,7 +140,7 @@ export function AssemblyWorkbench({
     if (!evaluation.isValidBase) {
       setFeedback({
         tone: 'error',
-        message: assemblyContent.invalidBaseFeedback,
+        kind: 'invalidBase',
       })
       setHighlightedSlot(slotIndex)
       return
@@ -97,7 +149,10 @@ export function AssemblyWorkbench({
     if (!evaluation.isCorrectPair) {
       setFeedback({
         tone: 'error',
-        message: `${candidateBase} 不能与 ${templateBase} 配对；${templateBase} 应与 ${evaluation.expectedBase} 配对。 / ${candidateBase} ne s'apparie pas avec ${templateBase}; ${templateBase} doit s'apparier avec ${evaluation.expectedBase}.`,
+        kind: 'incorrectPair',
+        candidateBase,
+        templateBase,
+        expectedBase: evaluation.expectedBase,
       })
       setHighlightedSlot(slotIndex)
       return
@@ -120,9 +175,14 @@ export function AssemblyWorkbench({
     setHintSlot(null)
     setFeedback({
       tone: 'success',
-      message: nextCompletion.isComplete
-        ? assemblyContent.completeFeedback
-        : `${assemblyContent.correctFeedback} ${templateBase}-${candidateBase} 有 ${evaluation.hydrogenBondCount} 条氢键示意线 / ${evaluation.hydrogenBondCount} liaisons H schématiques.`,
+      ...(nextCompletion.isComplete
+        ? { kind: 'complete' as const }
+        : {
+            kind: 'correctPair' as const,
+            templateBase,
+            candidateBase,
+            hydrogenBondCount: evaluation.hydrogenBondCount,
+          }),
     })
     onAssembledSequenceChange(nextAssembledSequence)
   }
@@ -134,7 +194,7 @@ export function AssemblyWorkbench({
     setHighlightedSlot(null)
     setFeedback({
       tone: 'neutral',
-      message: assemblyContent.initialFeedback,
+      kind: 'initial',
     })
     onAssembledSequenceChange(
       getCompletedAssemblySequence(challengeSequence, nextPlacedBases),
@@ -155,7 +215,7 @@ export function AssemblyWorkbench({
 
     setFeedback({
       tone: 'error',
-      message: assemblyContent.invalidBaseFeedback,
+      kind: 'invalidBase',
     })
   }
 
@@ -165,7 +225,7 @@ export function AssemblyWorkbench({
     if (nextEmptySlot === -1) {
       setFeedback({
         tone: 'success',
-        message: assemblyContent.completeFeedback,
+        kind: 'complete',
       })
       return
     }
@@ -175,7 +235,10 @@ export function AssemblyWorkbench({
     setHintSlot(nextEmptySlot)
     setFeedback({
       tone: 'neutral',
-      message: `提示：第 ${nextEmptySlot + 1} 位模板碱基是 ${templateBase}，应选择 ${expectedBase}。 / Indice: la base modèle en position ${nextEmptySlot + 1} est ${templateBase}; choisissez ${expectedBase}.`,
+      kind: 'hint',
+      slotNumber: nextEmptySlot + 1,
+      templateBase,
+      expectedBase,
     })
   }
 
@@ -183,14 +246,14 @@ export function AssemblyWorkbench({
     if (assembledSequence.length === 0) {
       setFeedback({
         tone: 'error',
-        message: assemblyContent.emptyBuildFeedback,
+        kind: 'emptyBuild',
       })
       return
     }
 
     setFeedback({
       tone: 'success',
-      message: assemblyContent.buildFeedback,
+      kind: 'build',
     })
     onBuildHelix(assembledSequence)
   }
@@ -206,12 +269,16 @@ export function AssemblyWorkbench({
     >
       <div className="assembly-header">
         <div>
-          <p className="eyebrow">拼装模式 / Mode assemblage</p>
-          <h2 id="assembly-title">{assemblyContent.title}</h2>
+          <p className="eyebrow">
+            {localize(uiText.assembly.eyebrow, language)}
+          </p>
+          <h2 id="assembly-title">
+            {localize(assemblyContent.title, language)}
+          </h2>
         </div>
         <div
           className="assembly-progress"
-          aria-label="拼装进度 / Progression de l'assemblage"
+          aria-label={localize(uiText.assembly.progressLabel, language)}
         >
           <span>{completion.completedCount}</span>
           <span>/</span>
@@ -219,7 +286,9 @@ export function AssemblyWorkbench({
         </div>
       </div>
 
-      <p className="assembly-intro">{assemblyContent.intro}</p>
+      <p className="assembly-intro">
+        {localize(assemblyContent.intro, language)}
+      </p>
 
       <div className="assembly-progress-track" aria-hidden="true">
         <div
@@ -228,7 +297,10 @@ export function AssemblyWorkbench({
         />
       </div>
 
-      <div className="base-palette" aria-label="可拖拽碱基 / Bases à déplacer">
+      <div
+        className="base-palette"
+        aria-label={localize(uiText.assembly.paletteLabel, language)}
+      >
         {VALID_DNA_BASES.map((base) => (
           <button
             key={base}
@@ -248,7 +320,7 @@ export function AssemblyWorkbench({
             }}
           >
             <span>{base}</span>
-            <small>{baseContent[base].name}</small>
+            <small>{localize(baseContent[base].name, language)}</small>
           </button>
         ))}
       </div>
@@ -256,7 +328,7 @@ export function AssemblyWorkbench({
       <div
         className="assembly-board"
         role="list"
-        aria-label="DNA 拼装槽位 / Emplacements d'assemblage ADN"
+        aria-label={localize(uiText.assembly.boardLabel, language)}
       >
         {templateBases.map((templateBase, slotIndex) => {
           const placedBase = placedBases[slotIndex]
@@ -297,20 +369,29 @@ export function AssemblyWorkbench({
                     clearSlot(slotIndex)
                   }
                 }}
-                aria-label={`第 ${slotIndex + 1} 位互补槽，模板碱基 ${templateBase} / Emplacement complémentaire ${slotIndex + 1}, base modèle ${templateBase}`}
+                aria-label={
+                  language === 'fr'
+                    ? `Emplacement complémentaire ${
+                        slotIndex + 1
+                      }, base modèle ${templateBase}`
+                    : `第 ${slotIndex + 1} 位互补槽，模板碱基 ${templateBase}`
+                }
               >
-                {placedBase ?? '放入 / Poser'}
+                {placedBase ?? localize(uiText.assembly.slotEmpty, language)}
               </button>
               <span className="assembly-pair-note">
                 {placedBase ? (
                   <>
                     <CheckCircle2 size={15} aria-hidden="true" />
                     {templateBase}-{placedBase} ·{' '}
-                    {pairTypeContent.hydrogenBondCount} 条氢键 /{' '}
-                    {pairTypeContent.hydrogenBondCount} liaisons H
+                    {pairTypeContent.hydrogenBondCount}{' '}
+                    {localize(uiText.assembly.hydrogenBonds, language)}
                   </>
                 ) : (
-                  `等待 ${expectedBase} / Attente ${expectedBase}`
+                  `${localize(
+                    uiText.assembly.waitingFor,
+                    language,
+                  )} ${expectedBase}`
                 )}
               </span>
             </div>
@@ -319,17 +400,17 @@ export function AssemblyWorkbench({
       </div>
 
       <p className={`assembly-feedback is-${feedback.tone}`} role="status">
-        {feedback.message}
+        {feedbackMessage}
       </p>
 
       <div className="assembly-actions">
         <button type="button" className="control-button" onClick={buildHelix}>
           <CheckCircle2 size={18} aria-hidden="true" />
-          <span>形成双螺旋 / Former l'hélice</span>
+          <span>{localize(uiText.assembly.buildHelix, language)}</span>
         </button>
         <button type="button" className="control-button" onClick={showNextHint}>
           <HelpCircle size={18} aria-hidden="true" />
-          <span>提示下一位 / Indice suivant</span>
+          <span>{localize(uiText.assembly.nextHint, language)}</span>
         </button>
         <button
           type="button"
@@ -337,11 +418,11 @@ export function AssemblyWorkbench({
           onClick={() => resetAssembly()}
         >
           <RotateCcw size={18} aria-hidden="true" />
-          <span>重置拼装 / Réinitialiser</span>
+          <span>{localize(uiText.assembly.reset, language)}</span>
         </button>
         <button type="button" className="control-button" onClick={switchChallenge}>
           <Shuffle size={18} aria-hidden="true" />
-          <span>换一组序列 / Nouvelle séquence</span>
+          <span>{localize(uiText.assembly.switchChallenge, language)}</span>
         </button>
       </div>
     </section>

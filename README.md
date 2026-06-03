@@ -1,8 +1,8 @@
 # DNA 双螺旋探索器 / Explorateur de la double hélice d'ADN
 
-面向高中和大学低年级生物教学的中法双语交互式 DNA 双螺旋模型网页 MVP。它用于课堂展示 DNA 的两条链、糖-磷酸骨架、碱基互补配对和双螺旋整体结构。
+面向高中和大学低年级生物教学的中法双语交互式 DNA 双螺旋模型网页 MVP。界面默认法语，可一键切换中文，并用于课堂展示 DNA 的两条链、糖-磷酸骨架、碱基互补配对和双螺旋整体结构。
 
-MVP web interactif bilingue chinois-français pour l'enseignement de la double hélice d'ADN au lycée et en début d'université. Il permet de montrer les deux brins, le squelette sucre-phosphate, l'appariement complémentaire des bases et la structure globale de la double hélice.
+MVP web interactif bilingue chinois-français pour l'enseignement de la double hélice d'ADN au lycée et en début d'université. L'interface est en français par défaut, avec un bouton pour basculer en chinois. Il permet de montrer les deux brins, le squelette sucre-phosphate, l'appariement complémentaire des bases et la structure globale de la double hélice.
 
 ## 如何运行 / Lancer le projet
 
@@ -42,7 +42,8 @@ Convient à EdgeOne Pages, Cloudflare Pages, Vercel Static, Netlify et autres h�
 - 两条螺旋状糖-磷酸骨架、内部碱基和教学化氢键点线。 / Deux squelettes sucre-phosphate hélicoïdaux, bases internes et liaisons hydrogène schématiques en pointillés.
 - 仅允许 A-T 和 C-G 互补配对，不混入 RNA 的 U。 / Appariements complémentaires A-T et C-G uniquement, sans U d'ARN.
 - 鼠标旋转、缩放、拖拽观察模型。 / Rotation, zoom et déplacement du modèle à la souris.
-- 点击碱基查看名称、配对关系和中法双语解释。 / Clic sur une base pour afficher son nom, son appariement et son explication bilingue.
+- 默认法语界面，可一键切换中文并记住选择。 / Interface française par défaut, bascule en chinois en un clic avec mémorisation du choix.
+- 点击碱基查看名称、配对关系和当前语言解释。 / Clic sur une base pour afficher son nom, son appariement et son explication dans la langue active.
 - 控制标签、骨架、氢键、互补配对高亮和双链分离动画。 / Contrôle des étiquettes, du squelette, des liaisons H, du surlignage des paires et de l'animation de séparation des brins.
 - Step 1 到 Step 4 分步讲解模式。 / Mode guidé de l'étape 1 à l'étape 4.
 - 输入 DNA 序列并自动生成互补链，模型最多展示前 20 个碱基对。 / Saisie d'une séquence ADN et génération automatique du brin complémentaire; affichage limité aux 20 premières paires de bases.

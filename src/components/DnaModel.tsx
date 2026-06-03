@@ -441,7 +441,7 @@ export function DnaModel({
   selection,
   options,
   currentStep,
-  emptyMessage = '请输入 A/T/C/G 序列 / Saisir une séquence A/T/C/G',
+  emptyMessage = 'Saisir une séquence A/T/C/G',
   onSelect,
 }: DnaModelProps) {
   const [splitProgress, setSplitProgress] = useState(options.splitOpen ? 1 : 0)
