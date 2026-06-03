@@ -44,47 +44,47 @@ export function ControlPanel({
   return (
     <section className="panel control-panel" aria-labelledby="controls-title">
       <div className="panel-heading">
-        <p className="eyebrow">控制</p>
-        <h2 id="controls-title">模型显示</h2>
+        <p className="eyebrow">控制 / Contrôles</p>
+        <h2 id="controls-title">模型显示 / Affichage du modèle</h2>
       </div>
 
       <div className="control-grid">
         <button type="button" className="control-button" onClick={onResetView}>
           <RotateCcw size={18} aria-hidden="true" />
-          <span>重置视角</span>
+          <span>重置视角 / Réinitialiser la vue</span>
         </button>
 
         <ToggleButton
           active={options.showLabels}
-          label="显示标签"
+          label="显示标签 / Afficher les étiquettes"
           icon={<Tag size={18} aria-hidden="true" />}
           onClick={() => toggleOption('showLabels')}
         />
 
         <ToggleButton
           active={options.highlightPairs}
-          label="高亮互补配对"
+          label="高亮互补配对 / Surligner les paires"
           icon={<BadgeCheck size={18} aria-hidden="true" />}
           onClick={() => toggleOption('highlightPairs')}
         />
 
         <ToggleButton
           active={options.showBackbone}
-          label="显示骨架"
+          label="显示骨架 / Afficher le squelette"
           icon={<Dna size={18} aria-hidden="true" />}
           onClick={() => toggleOption('showBackbone')}
         />
 
         <ToggleButton
           active={options.showHydrogenBonds}
-          label="显示氢键"
+          label="显示氢键 / Afficher les liaisons H"
           icon={<Link2 size={18} aria-hidden="true" />}
           onClick={() => toggleOption('showHydrogenBonds')}
         />
 
         <ToggleButton
           active={options.splitOpen}
-          label="分离双链"
+          label="分离双链 / Séparer les brins"
           icon={<Split size={18} aria-hidden="true" />}
           onClick={() => toggleOption('splitOpen')}
         />

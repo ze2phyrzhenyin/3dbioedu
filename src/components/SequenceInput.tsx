@@ -29,12 +29,12 @@ export function SequenceInput({
   return (
     <section className="panel sequence-panel" aria-labelledby="sequence-title">
       <div className="panel-heading">
-        <p className="eyebrow">学生互动</p>
-        <h2 id="sequence-title">互补链生成</h2>
+        <p className="eyebrow">学生互动 / Interaction élève</p>
+        <h2 id="sequence-title">互补链生成 / Générer le brin complémentaire</h2>
       </div>
 
       <label className="field-label" htmlFor="dna-sequence">
-        输入 DNA 序列
+        输入 DNA 序列 / Saisir une séquence ADN
       </label>
       <textarea
         id="dna-sequence"
@@ -52,13 +52,17 @@ export function SequenceInput({
       ) : null}
 
       <div className="sequence-output">
-        <span>互补链</span>
-        <output>{validation.isValid ? complementSequence || '空序列' : '-'}</output>
+        <span>互补链 / Brin complémentaire</span>
+        <output>
+          {validation.isValid
+            ? complementSequence || '空序列 / Séquence vide'
+            : '-'}
+        </output>
       </div>
 
       <div className="sequence-output">
-        <span>模型展示</span>
-        <output>{displayedSequence || '空序列'}</output>
+        <span>模型展示 / Séquence affichée</span>
+        <output>{displayedSequence || '空序列 / Séquence vide'}</output>
       </div>
 
       {isTruncated ? (
@@ -66,7 +70,10 @@ export function SequenceInput({
       ) : null}
 
       {!validation.isValid ? (
-        <p className="form-notice">模型保留上一条有效序列：{activeSequence}</p>
+        <p className="form-notice">
+          模型保留上一条有效序列：{activeSequence} / Le modèle conserve la
+          dernière séquence valide: {activeSequence}
+        </p>
       ) : null}
     </section>
   )

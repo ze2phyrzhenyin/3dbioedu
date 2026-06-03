@@ -441,7 +441,7 @@ export function DnaModel({
   selection,
   options,
   currentStep,
-  emptyMessage = '请输入 A/T/C/G 序列',
+  emptyMessage = '请输入 A/T/C/G 序列 / Saisir une séquence A/T/C/G',
   onSelect,
 }: DnaModelProps) {
   const [splitProgress, setSplitProgress] = useState(options.splitOpen ? 1 : 0)
@@ -577,7 +577,13 @@ export function DnaModel({
   if (basePairs.length === 0) {
     return (
       <Billboard position={[0, 0, 0]}>
-        <Text fontSize={0.28} color="#334155" anchorX="center">
+        <Text
+          fontSize={0.22}
+          color="#334155"
+          anchorX="center"
+          textAlign="center"
+          maxWidth={4.8}
+        >
           {emptyMessage}
         </Text>
       </Billboard>

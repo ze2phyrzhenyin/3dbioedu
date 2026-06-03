@@ -147,11 +147,14 @@ export function DnaFallbackView({
   const strandB = basePairs.map((_, index) => getPoint(index, -1))
 
   return (
-    <div className="scene-fallback" aria-label="DNA 二维教学示意图">
+    <div
+      className="scene-fallback"
+      aria-label="DNA 二维教学示意图 / Schéma pédagogique ADN en 2D"
+    >
       <svg
         viewBox={`0 0 ${VIEWBOX_WIDTH} ${viewboxHeight}`}
         role="img"
-        aria-label="DNA 双螺旋二维备用示意图"
+        aria-label="DNA 双螺旋二维备用示意图 / Schéma 2D de secours de la double hélice ADN"
       >
         {visibility.showBackbone ? (
           <>
@@ -237,7 +240,8 @@ export function DnaFallbackView({
           : null}
       </svg>
       <p className="scene-fallback-note">
-        当前环境未启用 WebGL，显示二维教学示意图。
+        当前环境未启用 WebGL，显示二维教学示意图。 / WebGL n'est pas activé
+        dans cet environnement; affichage du schéma pédagogique 2D.
       </p>
     </div>
   )

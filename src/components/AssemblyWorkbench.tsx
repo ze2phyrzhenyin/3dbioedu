@@ -97,7 +97,7 @@ export function AssemblyWorkbench({
     if (!evaluation.isCorrectPair) {
       setFeedback({
         tone: 'error',
-        message: `${candidateBase} 不能与 ${templateBase} 配对；${templateBase} 应与 ${evaluation.expectedBase} 配对。`,
+        message: `${candidateBase} 不能与 ${templateBase} 配对；${templateBase} 应与 ${evaluation.expectedBase} 配对。 / ${candidateBase} ne s'apparie pas avec ${templateBase}; ${templateBase} doit s'apparier avec ${evaluation.expectedBase}.`,
       })
       setHighlightedSlot(slotIndex)
       return
@@ -122,7 +122,7 @@ export function AssemblyWorkbench({
       tone: 'success',
       message: nextCompletion.isComplete
         ? assemblyContent.completeFeedback
-        : `${assemblyContent.correctFeedback} ${templateBase}-${candidateBase} 有 ${evaluation.hydrogenBondCount} 条氢键示意线。`,
+        : `${assemblyContent.correctFeedback} ${templateBase}-${candidateBase} 有 ${evaluation.hydrogenBondCount} 条氢键示意线 / ${evaluation.hydrogenBondCount} liaisons H schématiques.`,
     })
     onAssembledSequenceChange(nextAssembledSequence)
   }
@@ -175,7 +175,7 @@ export function AssemblyWorkbench({
     setHintSlot(nextEmptySlot)
     setFeedback({
       tone: 'neutral',
-      message: `提示：第 ${nextEmptySlot + 1} 位模板碱基是 ${templateBase}，应选择 ${expectedBase}。`,
+      message: `提示：第 ${nextEmptySlot + 1} 位模板碱基是 ${templateBase}，应选择 ${expectedBase}。 / Indice: la base modèle en position ${nextEmptySlot + 1} est ${templateBase}; choisissez ${expectedBase}.`,
     })
   }
 
@@ -206,10 +206,13 @@ export function AssemblyWorkbench({
     >
       <div className="assembly-header">
         <div>
-          <p className="eyebrow">拼装模式</p>
+          <p className="eyebrow">拼装模式 / Mode assemblage</p>
           <h2 id="assembly-title">{assemblyContent.title}</h2>
         </div>
-        <div className="assembly-progress" aria-label="拼装进度">
+        <div
+          className="assembly-progress"
+          aria-label="拼装进度 / Progression de l'assemblage"
+        >
           <span>{completion.completedCount}</span>
           <span>/</span>
           <span>{completion.totalCount}</span>
@@ -225,7 +228,7 @@ export function AssemblyWorkbench({
         />
       </div>
 
-      <div className="base-palette" aria-label="可拖拽碱基">
+      <div className="base-palette" aria-label="可拖拽碱基 / Bases à déplacer">
         {VALID_DNA_BASES.map((base) => (
           <button
             key={base}
@@ -250,7 +253,11 @@ export function AssemblyWorkbench({
         ))}
       </div>
 
-      <div className="assembly-board" role="list" aria-label="DNA 拼装槽位">
+      <div
+        className="assembly-board"
+        role="list"
+        aria-label="DNA 拼装槽位 / Emplacements d'assemblage ADN"
+      >
         {templateBases.map((templateBase, slotIndex) => {
           const placedBase = placedBases[slotIndex]
           const expectedBase = getComplementBase(templateBase)
@@ -290,19 +297,20 @@ export function AssemblyWorkbench({
                     clearSlot(slotIndex)
                   }
                 }}
-                aria-label={`第 ${slotIndex + 1} 位互补槽，模板碱基 ${templateBase}`}
+                aria-label={`第 ${slotIndex + 1} 位互补槽，模板碱基 ${templateBase} / Emplacement complémentaire ${slotIndex + 1}, base modèle ${templateBase}`}
               >
-                {placedBase ?? '放入'}
+                {placedBase ?? '放入 / Poser'}
               </button>
               <span className="assembly-pair-note">
                 {placedBase ? (
                   <>
                     <CheckCircle2 size={15} aria-hidden="true" />
                     {templateBase}-{placedBase} ·{' '}
-                    {pairTypeContent.hydrogenBondCount} 条氢键
+                    {pairTypeContent.hydrogenBondCount} 条氢键 /{' '}
+                    {pairTypeContent.hydrogenBondCount} liaisons H
                   </>
                 ) : (
-                  `等待 ${expectedBase}`
+                  `等待 ${expectedBase} / Attente ${expectedBase}`
                 )}
               </span>
             </div>
@@ -317,11 +325,11 @@ export function AssemblyWorkbench({
       <div className="assembly-actions">
         <button type="button" className="control-button" onClick={buildHelix}>
           <CheckCircle2 size={18} aria-hidden="true" />
-          <span>形成双螺旋</span>
+          <span>形成双螺旋 / Former l'hélice</span>
         </button>
         <button type="button" className="control-button" onClick={showNextHint}>
           <HelpCircle size={18} aria-hidden="true" />
-          <span>提示下一位</span>
+          <span>提示下一位 / Indice suivant</span>
         </button>
         <button
           type="button"
@@ -329,11 +337,11 @@ export function AssemblyWorkbench({
           onClick={() => resetAssembly()}
         >
           <RotateCcw size={18} aria-hidden="true" />
-          <span>重置拼装</span>
+          <span>重置拼装 / Réinitialiser</span>
         </button>
         <button type="button" className="control-button" onClick={switchChallenge}>
           <Shuffle size={18} aria-hidden="true" />
-          <span>换一组序列</span>
+          <span>换一组序列 / Nouvelle séquence</span>
         </button>
       </div>
     </section>

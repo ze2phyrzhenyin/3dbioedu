@@ -58,10 +58,13 @@
   min-height: 36px;
   border: 0;
   border-radius: 6px;
+  padding: 7px 8px;
   background: transparent;
   color: #334155;
   font-weight: 720;
+  line-height: 1.25;
   touch-action: manipulation;
+  overflow-wrap: anywhere;
 }
 
 .mode-button:hover {
@@ -288,8 +291,10 @@
   background: #f8fafc;
   color: #172033;
   font-weight: 650;
+  line-height: 1.25;
   text-align: left;
   touch-action: manipulation;
+  overflow-wrap: anywhere;
   transition:
     border-color 140ms ease,
     background 140ms ease,
@@ -337,6 +342,11 @@
   flex: 0 0 auto;
 }
 
+.control-button span,
+.step-button span {
+  min-width: 0;
+}
+
 .step-list {
   display: grid;
   gap: 8px;
@@ -344,7 +354,7 @@
 
 .step-button {
   display: grid;
-  grid-template-columns: 70px minmax(0, 1fr);
+  grid-template-columns: 92px minmax(0, 1fr);
   padding: 9px 10px;
 }
 
@@ -579,6 +589,8 @@
   color: #334155;
   font-size: 0.72rem;
   font-weight: 680;
+  line-height: 1.18;
+  text-align: center;
 }
 
 .assembly-board {
@@ -588,7 +600,7 @@
 
 .assembly-row {
   display: grid;
-  grid-template-columns: 32px 48px minmax(46px, 1fr) 70px minmax(120px, 1fr);
+  grid-template-columns: 32px 48px minmax(46px, 1fr) 88px minmax(112px, 1fr);
   gap: 8px;
   align-items: center;
   min-height: 46px;
@@ -652,7 +664,10 @@
   border: 1px dashed #64748b;
   background: #ffffff;
   color: #475569;
+  line-height: 1.18;
+  text-align: center;
   touch-action: manipulation;
+  overflow-wrap: anywhere;
 }
 
 .assembly-row.is-complete .assembly-slot {
@@ -676,6 +691,7 @@
   display: inline-flex;
   min-width: 0;
   align-items: center;
+  flex-wrap: wrap;
   gap: 5px;
   color: #475569;
   font-size: 0.83rem;
@@ -713,7 +729,7 @@
 
 .assembly-actions {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 12px;
 }
@@ -787,9 +803,6 @@
     min-height: 420px;
   }
 
-  .assembly-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 1020px) {
@@ -910,7 +923,7 @@
   }
 
   .step-button {
-    grid-template-columns: 62px minmax(0, 1fr);
+    grid-template-columns: 84px minmax(0, 1fr);
   }
 
   .base-palette {
@@ -931,7 +944,7 @@
   }
 
   .assembly-row {
-    grid-template-columns: 26px 42px minmax(30px, 1fr) 64px;
+    grid-template-columns: 26px 42px minmax(30px, 1fr) 70px;
     gap: 6px;
     padding: 6px;
   }

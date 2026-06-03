@@ -156,7 +156,7 @@ function App() {
       compact={learningMode === 'assemble'}
       emptyMessage={
         learningMode === 'assemble'
-          ? '拖入正确互补碱基后，这里会生成双螺旋片段'
+          ? "完成正确配对后生成双螺旋片段 / Le segment 3D apparaît après l'appariement correct"
           : undefined
       }
       onSelect={(nextSelection) =>
@@ -180,14 +180,20 @@ function App() {
     <main className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">教学简化模型</p>
-          <h1>DNA Double Helix Explorer</h1>
+          <p className="eyebrow">教学简化模型 / Modèle pédagogique simplifié</p>
+          <h1>DNA 双螺旋探索器 / Explorateur de la double hélice d'ADN</h1>
         </div>
         <div className="header-tools">
           <p className="header-summary">
-            观察两条链、糖-磷酸骨架、A-T / C-G 互补配对和双螺旋整体结构。
+            观察两条链、糖-磷酸骨架、A-T / C-G 互补配对和双螺旋整体结构。 /
+            Observez les deux brins, le squelette sucre-phosphate, les
+            appariements A-T / C-G et la structure globale de la double hélice.
           </p>
-          <div className="mode-switch" role="group" aria-label="学习模式">
+          <div
+            className="mode-switch"
+            role="group"
+            aria-label="学习模式 / Mode d'apprentissage"
+          >
             <button
               type="button"
               className={`mode-button ${
@@ -196,7 +202,7 @@ function App() {
               aria-pressed={learningMode === 'explore'}
               onClick={() => handleLearningModeChange('explore')}
             >
-              观察模型
+              观察模型 / Explorer
             </button>
             <button
               type="button"
@@ -206,7 +212,7 @@ function App() {
               aria-pressed={learningMode === 'assemble'}
               onClick={() => handleLearningModeChange('assemble')}
             >
-              拼装模式
+              拼装模式 / Assembler
             </button>
           </div>
         </div>
@@ -214,7 +220,10 @@ function App() {
 
       {learningMode === 'assemble' ? (
         <div className="assembly-workspace">
-          <section className="assembly-main-grid" aria-label="DNA 拼装工作区">
+          <section
+            className="assembly-main-grid"
+            aria-label="DNA 拼装工作区 / Espace d'assemblage ADN"
+          >
             <AssemblyWorkbench
               onAssembledSequenceChange={setAssemblySequence}
               onBuildHelix={handleBuildHelixFromAssembly}
@@ -240,7 +249,10 @@ function App() {
             />
           </aside>
 
-          <section className="stage-column" aria-label="DNA 模型与序列区域">
+          <section
+            className="stage-column"
+            aria-label="DNA 模型与序列区域 / Zone modèle ADN et séquence"
+          >
             {modelScene}
           </section>
 
