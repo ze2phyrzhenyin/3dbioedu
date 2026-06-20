@@ -265,9 +265,41 @@ export const uiText = {
       fr: 'Assembler',
       zh: '拼装模式',
     },
+    metabolismMode: {
+      fr: 'Photosynthèse',
+      zh: '光合与呼吸',
+    },
+    ecosystemMode: {
+      fr: 'Écosystème',
+      zh: '生态系统',
+    },
+    metabolismTitle: {
+      fr: 'Photosynthèse et respiration',
+      zh: '光合作用与呼吸作用模型',
+    },
+    metabolismSummary: {
+      fr: 'Comparez photosynthèse et respiration, ajustez les facteurs du milieu et observez le bilan net en dioxygène, dioxyde de carbone et matière organique.',
+      zh: '调节光照、二氧化碳、水分、温度和叶片面积，比较光合作用与呼吸作用对氧气、二氧化碳和有机物的净影响。',
+    },
+    ecosystemTitle: {
+      fr: "Modèle dynamique d'écosystème",
+      zh: '生态系统动态模型',
+    },
+    ecosystemSummary: {
+      fr: "Modifiez un réseau alimentaire, augmentez les prédateurs ou la pollution, puis observez les flux d'énergie, les populations et la stabilité du système.",
+      zh: '调整食物网、增加捕食者或污染强度，观察能量流动、种群数量和系统稳定性的变化。',
+    },
     assemblyWorkspaceLabel: {
       fr: "Espace d'assemblage ADN",
       zh: 'DNA 拼装工作区',
+    },
+    metabolismWorkspaceLabel: {
+      fr: 'Espace photosynthèse et respiration',
+      zh: '光合作用与呼吸作用工作区',
+    },
+    ecosystemWorkspaceLabel: {
+      fr: "Espace modèle d'écosystème",
+      zh: '生态系统模型工作区',
     },
     stageLabel: {
       fr: 'Zone modèle ADN et séquence',

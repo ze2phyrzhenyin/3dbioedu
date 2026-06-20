@@ -5,7 +5,9 @@ import { AssemblyHelpPanel } from './components/AssemblyHelpPanel'
 import { AssemblyWorkbench } from './components/AssemblyWorkbench'
 import { ControlPanel } from './components/ControlPanel'
 import { DnaScene } from './components/DnaScene'
+import { EcosystemLab } from './components/EcosystemLab'
 import { InfoPanel } from './components/InfoPanel'
+import { PhotosynthesisLab } from './components/PhotosynthesisLab'
 import { SequenceInput } from './components/SequenceInput'
 import { StepGuide } from './components/StepGuide'
 import {
@@ -152,8 +154,11 @@ function App() {
   }
 
   useEffect(() => {
-    document.title = localize(uiText.app.title, language)
-  }, [language])
+    document.title = localize(getAppTitle(learningMode), language)
+  }, [language, learningMode])
+
+  const appTitle = getAppTitle(learningMode)
+  const appSummary = getAppSummary(learningMode)
 
   const modelScene = (
     <DnaScene
@@ -190,11 +195,11 @@ function App() {
       <header className="app-header">
         <div>
           <p className="eyebrow">{localize(uiText.app.eyebrow, language)}</p>
-          <h1>{localize(uiText.app.title, language)}</h1>
+          <h1>{localize(appTitle, language)}</h1>
         </div>
         <div className="header-tools">
           <p className="header-summary">
-            {localize(uiText.app.summary, language)}
+            {localize(appSummary, language)}
           </p>
           <div className="header-actions">
             <button
@@ -232,12 +237,44 @@ function App() {
               >
                 {localize(uiText.app.assembleMode, language)}
               </button>
+              <button
+                type="button"
+                className={`mode-button ${
+                  learningMode === 'metabolism' ? 'is-active' : ''
+                }`}
+                aria-pressed={learningMode === 'metabolism'}
+                onClick={() => handleLearningModeChange('metabolism')}
+              >
+                {localize(uiText.app.metabolismMode, language)}
+              </button>
+              <button
+                type="button"
+                className={`mode-button ${
+                  learningMode === 'ecosystem' ? 'is-active' : ''
+                }`}
+                aria-pressed={learningMode === 'ecosystem'}
+                onClick={() => handleLearningModeChange('ecosystem')}
+              >
+                {localize(uiText.app.ecosystemMode, language)}
+              </button>
             </div>
           </div>
         </div>
       </header>
 
-      {learningMode === 'assemble' ? (
+      {learningMode === 'ecosystem' ? (
+        <section
+          aria-label={localize(uiText.app.ecosystemWorkspaceLabel, language)}
+        >
+          <EcosystemLab />
+        </section>
+      ) : learningMode === 'metabolism' ? (
+        <section
+          aria-label={localize(uiText.app.metabolismWorkspaceLabel, language)}
+        >
+          <PhotosynthesisLab />
+        </section>
+      ) : learningMode === 'assemble' ? (
         <div className="assembly-workspace">
           <section
             className="assembly-main-grid"
@@ -291,6 +328,30 @@ function App() {
       )}
     </main>
   )
+}
+
+function getAppTitle(learningMode: LearningMode) {
+  if (learningMode === 'metabolism') {
+    return uiText.app.metabolismTitle
+  }
+
+  if (learningMode === 'ecosystem') {
+    return uiText.app.ecosystemTitle
+  }
+
+  return uiText.app.title
+}
+
+function getAppSummary(learningMode: LearningMode) {
+  if (learningMode === 'metabolism') {
+    return uiText.app.metabolismSummary
+  }
+
+  if (learningMode === 'ecosystem') {
+    return uiText.app.ecosystemSummary
+  }
+
+  return uiText.app.summary
 }
 
 export default App
