@@ -36,6 +36,33 @@ Convient à EdgeOne Pages, Cloudflare Pages, Vercel Static, Netlify et autres h�
 - 项目根目录 / Racine du projet: `/`
 - Vercel: `vercel.json` 使用相同安装命令、构建命令和输出目录 / utilise les mêmes commandes d'installation, de build et le même dossier de sortie.
 
+## 自动发布 / Publication automatique
+
+本机已配置仓库级 `post-push` hook。之后推送 `main` 分支时，会自动运行检查并发布到 Vercel 和阿里云 `/dbio/`。
+
+```bash
+npm run hooks:install
+```
+
+日常更新推荐使用一条命令完成检查、提交、推送和部署：
+
+```bash
+npm run deploy:prod -- "更新说明"
+```
+
+也可以手动推送；只要当前机器启用了 `.githooks`，推送 `main` 后会自动部署：
+
+```bash
+git push origin main
+```
+
+可选环境变量：
+
+- `DBIO_AUTO_DEPLOY=0`: 临时跳过 post-push 自动部署。
+- `DBIO_SKIP_VERCEL=1`: 跳过 Vercel。
+- `DBIO_SKIP_ALIYUN=1`: 跳过阿里云。
+- `DBIO_SKIP_CHECKS=1`: 跳过本地测试、lint 和构建检查。
+
 ## 主要功能 / Fonctionnalités principales
 
 - 代码生成的 3D DNA 双螺旋模型，无外部图片或 3D 模型文件依赖。 / Modèle 3D de double hélice ADN généré par code, sans image externe ni fichier 3D.

@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:prod": "scripts/release-deploy.sh",
+    "deploy:after-push": "scripts/deploy-after-push.sh --force",
+    "hooks:install": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
