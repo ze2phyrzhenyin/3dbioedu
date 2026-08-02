@@ -1,9 +1,13 @@
 import type { Language, StepId } from '../types'
 import type { DnaBase, PairType } from '../utils/dna'
+import { englishTranslations } from './englishTranslations'
 
-export type LocalizedText = Record<Language, string>
+export type LocalizedText = Record<'fr' | 'zh', string> & { en?: string }
 
 export function localize(content: LocalizedText, language: Language) {
+  if (language === 'en') {
+    return content.en ?? englishTranslations[content.fr] ?? content.fr
+  }
   return content[language]
 }
 
@@ -16,6 +20,7 @@ export const ASSEMBLY_CHALLENGE_SEQUENCES = [
 ] as const
 
 export const languageNames: Record<Language, string> = {
+  en: 'English',
   fr: 'Français',
   zh: '中文',
 }
@@ -273,6 +278,14 @@ export const uiText = {
       fr: 'Écosystème',
       zh: '生态系统',
     },
+    geographyMode: {
+      fr: 'Géographie',
+      zh: '地理环流',
+    },
+    windMode: {
+      fr: 'Vents',
+      zh: '风向判读',
+    },
     metabolismTitle: {
       fr: 'Photosynthèse et respiration',
       zh: '光合作用与呼吸作用模型',
@@ -289,6 +302,22 @@ export const uiText = {
       fr: "Modifiez un réseau alimentaire, augmentez les prédateurs ou la pollution, puis observez les flux d'énergie, les populations et la stabilité du système.",
       zh: '调整食物网、增加捕食者或污染强度，观察能量流动、种群数量和系统稳定性的变化。',
     },
+    geographyTitle: {
+      fr: 'Circulation atmosphérique et océanique',
+      zh: '大气环流与洋流模型',
+    },
+    geographySummary: {
+      fr: 'Reliez le rayonnement solaire, les ceintures de pression, les vents planétaires, la force de Coriolis, les courants océaniques et les climats.',
+      zh: '联动太阳辐射、气压带、风带、地转偏向力、洋流和气候成因，训练高中地理环流逻辑。',
+    },
+    windTitle: {
+      fr: 'Lecture des vents et isobares',
+      zh: '等压线风向判读模型',
+    },
+    windSummary: {
+      fr: "Jugez le vent réel à partir des hautes et basses pressions, de l'hémisphère, du frottement et de l'altitude.",
+      zh: '从高低压、半球、摩擦力和高度出发，动态判读近地面风与高空风的实际方向。',
+    },
     assemblyWorkspaceLabel: {
       fr: "Espace d'assemblage ADN",
       zh: 'DNA 拼装工作区',
@@ -300,6 +329,14 @@ export const uiText = {
     ecosystemWorkspaceLabel: {
       fr: "Espace modèle d'écosystème",
       zh: '生态系统模型工作区',
+    },
+    geographyWorkspaceLabel: {
+      fr: 'Espace modèle de géographie physique',
+      zh: '自然地理环流模型工作区',
+    },
+    windWorkspaceLabel: {
+      fr: 'Espace lecture des vents',
+      zh: '风向判读模型工作区',
     },
     stageLabel: {
       fr: 'Zone modèle ADN et séquence',

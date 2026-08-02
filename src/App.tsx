@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Languages } from 'lucide-react'
 
 import { AssemblyHelpPanel } from './components/AssemblyHelpPanel'
 import { AssemblyWorkbench } from './components/AssemblyWorkbench'
 import { ControlPanel } from './components/ControlPanel'
 import { DnaScene } from './components/DnaScene'
 import { EcosystemLab } from './components/EcosystemLab'
+import { GeographyCirculationLab } from './components/GeographyCirculationLab'
 import { InfoPanel } from './components/InfoPanel'
 import { PhotosynthesisLab } from './components/PhotosynthesisLab'
 import { SequenceInput } from './components/SequenceInput'
 import { StepGuide } from './components/StepGuide'
+import { WindReadingLab } from './components/WindReadingLab'
 import {
   DEFAULT_DNA_SEQUENCE,
   MAX_DISPLAYED_BASE_PAIRS,
@@ -34,8 +35,26 @@ const initialOptions: ViewOptions = {
   splitOpen: false,
 }
 
+const developerContact = {
+  label: {
+    en: 'Developer contact',
+    fr: 'Contact développeur',
+    zh: '开发者联系方式',
+  },
+  wechat: {
+    en: 'WeChat cebasmonde',
+    fr: 'WeChat cebasmonde',
+    zh: '微信 cebasmonde',
+  },
+  email: {
+    en: 'Email zephyr2515 at gmail dot com',
+    fr: 'E-mail zephyr2515 at gmail dot com',
+    zh: '邮箱 zephyr2515 at gmail dot com',
+  },
+}
+
 function App() {
-  const { language, toggleLanguage } = useLanguage()
+  const { language, setLanguage } = useLanguage()
   const [learningMode, setLearningMode] = useState<LearningMode>('explore')
   const [sequenceInput, setSequenceInput] = useState(DEFAULT_DNA_SEQUENCE)
   const [activeSequence, setActiveSequence] = useState(DEFAULT_DNA_SEQUENCE)
@@ -202,16 +221,24 @@ function App() {
             {localize(appSummary, language)}
           </p>
           <div className="header-actions">
-            <button
-              type="button"
-              className="language-button"
+            <div
+              className="language-button language-switcher"
+              role="group"
               aria-label={localize(uiText.language.ariaLabel, language)}
               title={localize(uiText.language.ariaLabel, language)}
-              onClick={toggleLanguage}
             >
-              <Languages size={17} aria-hidden="true" />
-              <span>{localize(uiText.language.switchLabel, language)}</span>
-            </button>
+              {(['en', 'fr', 'zh'] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={language === option ? 'is-active' : ''}
+                  aria-pressed={language === option}
+                  onClick={() => setLanguage(option)}
+                >
+                  {option === 'en' ? 'EN' : option === 'fr' ? 'FR' : '中文'}
+                </button>
+              ))}
+            </div>
             <div
               className="mode-switch"
               role="group"
@@ -257,12 +284,44 @@ function App() {
               >
                 {localize(uiText.app.ecosystemMode, language)}
               </button>
+              <button
+                type="button"
+                className={`mode-button ${
+                  learningMode === 'geography' ? 'is-active' : ''
+                }`}
+                aria-pressed={learningMode === 'geography'}
+                onClick={() => handleLearningModeChange('geography')}
+              >
+                {localize(uiText.app.geographyMode, language)}
+              </button>
+              <button
+                type="button"
+                className={`mode-button ${
+                  learningMode === 'wind' ? 'is-active' : ''
+                }`}
+                aria-pressed={learningMode === 'wind'}
+                onClick={() => handleLearningModeChange('wind')}
+              >
+                {localize(uiText.app.windMode, language)}
+              </button>
             </div>
           </div>
         </div>
       </header>
 
-      {learningMode === 'ecosystem' ? (
+      {learningMode === 'wind' ? (
+        <section
+          aria-label={localize(uiText.app.windWorkspaceLabel, language)}
+        >
+          <WindReadingLab />
+        </section>
+      ) : learningMode === 'geography' ? (
+        <section
+          aria-label={localize(uiText.app.geographyWorkspaceLabel, language)}
+        >
+          <GeographyCirculationLab />
+        </section>
+      ) : learningMode === 'ecosystem' ? (
         <section
           aria-label={localize(uiText.app.ecosystemWorkspaceLabel, language)}
         >
@@ -326,6 +385,11 @@ function App() {
           </aside>
         </div>
       )}
+      <footer className="developer-footer">
+        <span>{localize(developerContact.label, language)}</span>
+        <span>{localize(developerContact.wechat, language)}</span>
+        <span>{localize(developerContact.email, language)}</span>
+      </footer>
     </main>
   )
 }
@@ -339,6 +403,14 @@ function getAppTitle(learningMode: LearningMode) {
     return uiText.app.ecosystemTitle
   }
 
+  if (learningMode === 'geography') {
+    return uiText.app.geographyTitle
+  }
+
+  if (learningMode === 'wind') {
+    return uiText.app.windTitle
+  }
+
   return uiText.app.title
 }
 
@@ -349,6 +421,14 @@ function getAppSummary(learningMode: LearningMode) {
 
   if (learningMode === 'ecosystem') {
     return uiText.app.ecosystemSummary
+  }
+
+  if (learningMode === 'geography') {
+    return uiText.app.geographySummary
+  }
+
+  if (learningMode === 'wind') {
+    return uiText.app.windSummary
   }
 
   return uiText.app.summary

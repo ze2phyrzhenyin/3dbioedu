@@ -22,7 +22,12 @@ function getInitialLanguage(): Language {
 
   const storedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
 
-  return isLanguage(storedLanguage) ? storedLanguage : DEFAULT_LANGUAGE
+  if (isLanguage(storedLanguage)) return storedLanguage
+
+  const browserLanguage = window.navigator.language.toLowerCase()
+  if (browserLanguage.startsWith('zh')) return 'zh'
+  if (browserLanguage.startsWith('fr')) return 'fr'
+  return DEFAULT_LANGUAGE
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -34,13 +39,18 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const toggleLanguage = useCallback(() => {
     setLanguageState((currentLanguage) =>
-      currentLanguage === 'fr' ? 'zh' : 'fr',
+      currentLanguage === 'en'
+        ? 'fr'
+        : currentLanguage === 'fr'
+          ? 'zh'
+          : 'en',
     )
   }, [])
 
   useEffect(() => {
     window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
     document.documentElement.lang = htmlLangByLanguage[language]
+    document.documentElement.dir = 'ltr'
   }, [language])
 
   const value = useMemo(

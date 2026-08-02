@@ -3,9 +3,10 @@ import { createContext, useContext } from 'react'
 import type { Language } from './types'
 
 export const LANGUAGE_STORAGE_KEY = 'dbio-language'
-export const DEFAULT_LANGUAGE: Language = 'fr'
+export const DEFAULT_LANGUAGE: Language = 'en'
 
 export const htmlLangByLanguage: Record<Language, string> = {
+  en: 'en',
   fr: 'fr',
   zh: 'zh-CN',
 }
@@ -19,7 +20,7 @@ export interface LanguageContextValue {
 export const LanguageContext = createContext<LanguageContextValue | null>(null)
 
 export function isLanguage(value: string | null): value is Language {
-  return value === 'fr' || value === 'zh'
+  return value === 'en' || value === 'fr' || value === 'zh'
 }
 
 export function useLanguage() {

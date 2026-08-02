@@ -56,25 +56,29 @@ export function InfoPanel({ selection }: InfoPanelProps) {
         <div>
           <dt>{localize(uiText.info.pairing, language)}</dt>
           <dd>
-            {language === 'fr'
+            {language === 'zh'
+              ? `${pair.base} 与 ${pair.complement} 配对`
+              : language === 'fr'
               ? `${pair.base} s'apparie avec ${pair.complement}`
-              : `${pair.base} 与 ${pair.complement} 配对`}
+              : `${pair.base} pairs with ${pair.complement}`}
           </dd>
         </div>
         <div>
           <dt>{localize(uiText.info.basePair, language)}</dt>
           <dd>
-            {language === 'fr'
+            {language === 'zh'
+              ? `${pair.pairLabel}，属于 ${pairTypeContent.label} 配对`
+              : language === 'fr'
               ? `${pair.pairLabel}, appariement ${pairTypeContent.label}`
-              : `${pair.pairLabel}，属于 ${pairTypeContent.label} 配对`}
+              : `${pair.pairLabel}, ${pairTypeContent.label} pairing`}
           </dd>
         </div>
         <div>
           <dt>{localize(uiText.info.hydrogenBondCount, language)}</dt>
           <dd>
-            {language === 'fr'
-              ? pairTypeContent.hydrogenBondCount
-              : `${pairTypeContent.hydrogenBondCount} 条`}
+            {language === 'zh'
+              ? `${pairTypeContent.hydrogenBondCount} 条`
+              : pairTypeContent.hydrogenBondCount}
           </dd>
         </div>
         <div>

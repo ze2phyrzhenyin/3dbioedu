@@ -27,29 +27,19 @@ export function AssemblyHelpPanel() {
         <div>
           <dt>A-T</dt>
           <dd>
-            {language === 'fr'
-              ? `${pairContent['A-T'].hydrogenBondCount} ${localize(
-                  uiText.assembly.hydrogenBondLines,
-                  language,
-                )}`
-              : `${pairContent['A-T'].hydrogenBondCount} ${localize(
-                  uiText.assembly.hydrogenBondLines,
-                  language,
-                )}`}
+            {`${pairContent['A-T'].hydrogenBondCount} ${localize(
+              uiText.assembly.hydrogenBondLines,
+              language,
+            )}`}
           </dd>
         </div>
         <div>
           <dt>C-G</dt>
           <dd>
-            {language === 'fr'
-              ? `${pairContent['C-G'].hydrogenBondCount} ${localize(
-                  uiText.assembly.hydrogenBondLines,
-                  language,
-                )}`
-              : `${pairContent['C-G'].hydrogenBondCount} ${localize(
-                  uiText.assembly.hydrogenBondLines,
-                  language,
-                )}`}
+            {`${pairContent['C-G'].hydrogenBondCount} ${localize(
+              uiText.assembly.hydrogenBondLines,
+              language,
+            )}`}
           </dd>
         </div>
       </dl>

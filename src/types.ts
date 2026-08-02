@@ -1,8 +1,14 @@
 import type { BasePair, DnaBase } from './utils/dna'
 
 export type StepId = 1 | 2 | 3 | 4
-export type LearningMode = 'explore' | 'assemble' | 'metabolism' | 'ecosystem'
-export type Language = 'fr' | 'zh'
+export type LearningMode =
+  | 'explore'
+  | 'assemble'
+  | 'metabolism'
+  | 'ecosystem'
+  | 'geography'
+  | 'wind'
+export type Language = 'en' | 'fr' | 'zh'
 
 export interface DnaSelection {
   pair: BasePair

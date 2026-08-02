@@ -11,6 +11,7 @@ import {
   uiText,
 } from '../data/scienceContent'
 import { useLanguage } from '../languageContext'
+import type { Language } from '../types'
 import {
   evaluateBasePlacement,
   getAssemblyCompletion,
@@ -45,16 +46,26 @@ function getBaseChipStyle(base: DnaBase): CSSProperties {
   } as CSSProperties
 }
 
-function getFeedbackMessage(feedback: FeedbackState, language: 'fr' | 'zh') {
+function getFeedbackMessage(feedback: FeedbackState, language: Language) {
   switch (feedback.kind) {
     case 'initial':
       return localize(assemblyContent.initialFeedback, language)
     case 'hint':
-      return language === 'fr'
+      return language === 'zh'
+        ? `提示：第 ${feedback.slotNumber} 位模板碱基是 ${feedback.templateBase}，应选择 ${feedback.expectedBase}。`
+        : language === 'fr'
         ? `Indice: la base modèle en position ${feedback.slotNumber} est ${feedback.templateBase}; choisissez ${feedback.expectedBase}.`
-        : `提示：第 ${feedback.slotNumber} 位模板碱基是 ${feedback.templateBase}，应选择 ${feedback.expectedBase}。`
+        : `Hint: the template base at position ${feedback.slotNumber} is ${feedback.templateBase}; choose ${feedback.expectedBase}.`
     case 'correctPair':
-      return language === 'fr'
+      return language === 'zh'
+        ? `${localize(
+            assemblyContent.correctFeedback,
+            language,
+          )} ${feedback.templateBase}-${feedback.candidateBase} 有 ${feedback.hydrogenBondCount} ${localize(
+            uiText.assembly.hydrogenBondLines,
+            language,
+          )}。`
+        : language === 'fr'
         ? `${localize(
             assemblyContent.correctFeedback,
             language,
@@ -62,13 +73,7 @@ function getFeedbackMessage(feedback: FeedbackState, language: 'fr' | 'zh') {
             uiText.assembly.hydrogenBondLines,
             language,
           )}.`
-        : `${localize(
-            assemblyContent.correctFeedback,
-            language,
-          )} ${feedback.templateBase}-${feedback.candidateBase} 有 ${feedback.hydrogenBondCount} ${localize(
-            uiText.assembly.hydrogenBondLines,
-            language,
-          )}。`
+        : `${localize(assemblyContent.correctFeedback, language)} ${feedback.templateBase}-${feedback.candidateBase}: ${feedback.hydrogenBondCount} ${localize(uiText.assembly.hydrogenBondLines, language)}.`
     case 'complete':
       return localize(assemblyContent.completeFeedback, language)
     case 'build':
@@ -76,9 +81,11 @@ function getFeedbackMessage(feedback: FeedbackState, language: 'fr' | 'zh') {
     case 'invalidBase':
       return localize(assemblyContent.invalidBaseFeedback, language)
     case 'incorrectPair':
-      return language === 'fr'
+      return language === 'zh'
+        ? `${feedback.candidateBase} 不能与 ${feedback.templateBase} 配对；${feedback.templateBase} 应与 ${feedback.expectedBase} 配对。`
+        : language === 'fr'
         ? `${feedback.candidateBase} ne s'apparie pas avec ${feedback.templateBase}; ${feedback.templateBase} doit s'apparier avec ${feedback.expectedBase}.`
-        : `${feedback.candidateBase} 不能与 ${feedback.templateBase} 配对；${feedback.templateBase} 应与 ${feedback.expectedBase} 配对。`
+        : `${feedback.candidateBase} does not pair with ${feedback.templateBase}; ${feedback.templateBase} must pair with ${feedback.expectedBase}.`
     case 'emptyBuild':
       return localize(assemblyContent.emptyBuildFeedback, language)
   }
@@ -370,11 +377,13 @@ export function AssemblyWorkbench({
                   }
                 }}
                 aria-label={
-                  language === 'fr'
+                  language === 'zh'
+                    ? `第 ${slotIndex + 1} 位互补槽，模板碱基 ${templateBase}`
+                    : language === 'fr'
                     ? `Emplacement complémentaire ${
                         slotIndex + 1
                       }, base modèle ${templateBase}`
-                    : `第 ${slotIndex + 1} 位互补槽，模板碱基 ${templateBase}`
+                    : `Complementary slot ${slotIndex + 1}, template base ${templateBase}`
                 }
               >
                 {placedBase ?? localize(uiText.assembly.slotEmpty, language)}
